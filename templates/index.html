@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ATS Resume Expert</title>
+</head>
+
+<body>
+    <h1>ATS Tracking System</h1>
+    <form method="POST" action="/">
+        <textarea name="job_description" placeholder="Job Description"></textarea>
+        <select name="action">
+            <option value="Percentage Match">Percentage Match</option>
+        </select>
+        <button type="submit">Submit</button>
+    </form>
+    {% if results %}
+    <h2>Results</h2>
+    <ul>
+        {% for result in results %}
+        <li>
+            <p>Skills: {{ result.skills }}</p>
+            <p>Percentage Match: {{ result.percentage }}</p>
+        </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+</body>
+
+</html>

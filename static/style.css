@@ -1,0 +1,83 @@
+.card {
+    background-color: #393e46c7;
+    color: #fff;
+    width: 95%;
+    height: 80%;
+    margin: auto;
+    padding: 20px;
+    border-radius: 15px;
+
+  }
+  .card1 {
+    background-color: #393e46c7;
+    align-items: center;
+    color: #fff;
+    width: 95%;
+    height: 80%;
+    margin: auto;
+    padding: 20px;
+    border-radius: 15px;
+
+  }
+  .team-member {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+  .name{
+    flex: 1;
+  }
+
+  .slidecontainer {
+    flex: 4;
+    display: flex;/* Optional: Align the slider vertically in the middle */
+    align-items: center;
+    margin-left: 10;
+     /* Adjust spacing between name and slider */
+}
+  .slider {
+    -webkit-appearance: none;
+    width: 80%;
+    height: 5px;
+    border-radius: 5px;  
+    background: #d3d3d3;
+    margin-right: 20px;
+    outline: none;
+    opacity: 0.7;
+    -webkit-transition: .2s;    
+    transition: opacity .2s;
+  }
+  
+  .slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%; 
+    background: #ff5722;
+    cursor: pointer;
+  }
+  
+  .slider::-moz-range-thumb {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: #04AA6D;
+    cursor: pointer;
+  }
+  .class-header{
+    font-size: 100px;
+    font-weight: 900; 
+  }
+  .h1{
+    font-size: large;
+    font-weight: bolder; 
+  }
+  .a2{
+    font-size: 400px;
+    font-weight: bolder;
+  }
+
+
+  
+  
