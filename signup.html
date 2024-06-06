@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sign Up</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<link rel="stylesheet" href="styles.css">
+<style>
+  .error-message {
+    color: red;
+    font-size: 14px;
+  }
+
+  .input-group {
+    position: relative;
+    margin-bottom: 15px; /* Add margin to separate input groups */
+  }
+
+  .input-group i {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #999; /* Adjust icon color */
+  }
+
+  /* Popup styles */
+  .popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    display: none;
+    z-index: 9999;
+  }
+</style>
+</head>
+<body>
+
+<div class="background-container">
+  <img src="workers.png" alt="Background Image">
+  <div class="overlay"></div>
+  <div class="form-container">
+    <div class="signup-form">
+      <h2>Sign Up</h2>
+      <form id="signup-form" action="signup.php" method="POST" onsubmit="return validateForm()">
+        <div class="input-group">
+          <i class="fas fa-user"></i>
+          <input type="text" id="username" name="username" placeholder="Username" required>
+        </div>
+        <div class="input-group">
+          <i class="fas fa-envelope"></i>
+          <input type="email" id="email" name="email" placeholder="Email" required>
+        </div>
+        <div class="input-group">
+          <i class="fas fa-lock"></i>
+          <input type="password" id="password" name="password" placeholder="Password" required>
+        </div>
+        <div class="input-group">
+          <i class="fas fa-lock"></i>
+          <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirm Password" required>
+        </div>
+        <button type="submit">Sign Up</button>
+      </form>
+      <p>If you already have an account, <a href="login.html" style="color: #FF5722;">log in here</a>.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Popup container -->
+<div class="popup" id="popup">
+  <span id="popup-message"></span>
+</div>
+
+<script>
+  function validateForm() {
+    var username = document.getElementById("username").value;
+    var email = document.getElementById("email").value;
+    var password = document.getElementById("password").value;
+    var confirmPassword = document.getElementById("confirm-password").value;
+    var isValid = true;
+
+    // Check if any field is empty
+    if (username === "" || email === "" || password === "" || confirmPassword === "") {
+      displayPopup("Please fill in all fields.");
+      isValid = false;
+      return isValid;
+    }
+    
+    // Check if passwords match
+    if (password !== confirmPassword) {
+      displayPopup("Passwords do not match.");
+      isValid = false;
+      return isValid;
+    }
+
+    // Check email format using regular expression
+var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+if (!emailPattern.test(email)) {
+  displayPopup("Please enter a valid email address.");
+  isValid = false;
+  return isValid;
+}
+
+
+    // Check password strength
+    if (password.length < 8) {
+      displayPopup("Password must be at least 8 characters long.");
+      isValid = false;
+      return isValid;
+    }
+
+    // Check for at least one lowercase letter, one uppercase letter, and one digit
+    var passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/;
+    if (!passwordPattern.test(password)) {
+      displayPopup("Password must contain at least one lowercase letter, one uppercase letter, and one digit.");
+      isValid = false;
+      return isValid;
+    }
+
+    // Check for special characters
+    var specialCharacterPattern = /[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
+    if (!specialCharacterPattern.test(password)) {
+      displayPopup("Password must contain at least one special character.");
+      isValid = false;
+      return isValid;
+    }
+
+    return isValid;
+  }
+
+  // Function to display popup message
+  function displayPopup(message) {
+    var popup = document.getElementById("popup");
+    var popupMessage = document.getElementById("popup-message");
+    popupMessage.innerHTML = message;
+    popup.style.display = "block";
+    setTimeout(function() {
+      popup.style.display = "none";
+    }, 3000); // Hide popup after 3 seconds
+  }
+</script>
+
+</body>
+<style>
+  /* Add this CSS to make the popup visible */
+  .popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    display: none;
+    z-index: 9999;
+  }
+  
+  .popup.show {
+    display: block;
+  }
+  </style>
+  
+</html>

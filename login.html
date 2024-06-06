@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<link rel="stylesheet" href="styles.css">
+<style>
+  .error-message {
+    color: red;
+    font-size: 14px;
+  }
+
+  .input-group {
+    position: relative;
+    margin-bottom: 15px; /* Add margin to separate input groups */
+  }
+
+  .input-group i {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #999; /* Adjust icon color */
+  }
+
+  /* Custom styling for role selection tabs */
+  .role-selection {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+  }
+
+  .role-tab {
+    flex-grow: 1;
+    text-align: center;
+    cursor: pointer;
+    border: 1px solid transparent;
+    padding: 10px;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+  }
+
+  .role-tab.active {
+    border-color: #FF5722; /* Active tab border color */
+  }
+</style>
+</head>
+<body>
+
+<div class="background-container">
+  <img src="workers.png" alt="Background Image">
+  <div class="overlay"></div>
+  <div class="form-container">
+    <div class="login-form">
+      <h2>Login</h2>
+      <!-- Role selection tabs -->
+      <div class="role-selection">
+        <div class="role-tab active" data-role="admin">
+          <i class="fas fa-user-tie"></i> Admin
+        </div>
+        <div class="role-tab" data-role="employee">
+          <i class="fas fa-user"></i> Employee
+        </div>
+      </div>
+      <!-- End of role selection tabs -->
+      <form id="login-form" action="login.php" method="POST" onsubmit="return validateLoginForm()">
+        <div class="input-group">
+          <i class="fas fa-envelope"></i>
+          <input type="email" id="email" name="email" placeholder="Email" required>
+        </div>
+        <div class="input-group">
+          <i class="fas fa-lock"></i>
+          <input type="password" id="password" name="password" placeholder="Password" required>
+        </div>
+        <input type="hidden" id="role" name="role" value="admin"> 
+        <button type="submit">Login</button>
+      </form>
+    </div>
+    <!-- Removed signup link -->
+  </div>
+</div>
+
+<script>
+  // Function to handle role selection
+  document.querySelectorAll('.role-tab').forEach(tab => {
+    tab.addEventListener('click', function() {
+      document.querySelector('.role-tab.active').classList.remove('active');
+      this.classList.add('active');
+      document.getElementById('role').value = this.getAttribute('data-role'); // Update hidden input value
+    });
+  });
+
+  function validateLoginForm() {
+    var email = document.getElementById("email").value;
+    var password = document.getElementById("password").value;
+    var role = document.getElementById("role").value;
+    var isValid = true;
+
+    // Check if any field is empty
+    if (email === "" || password === "") {
+      alert("Please fill in all fields.");
+      isValid = false;
+    }
+
+    // Check email format using regular expression
+    var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailPattern.test(email)) {
+      alert("Please enter a valid email address.");
+      isValid = false;
+    }
+
+    return isValid;
+  }
+</script>
+
+</body>
+</html>
