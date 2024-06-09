@@ -1,3 +1,7 @@
+<?php 
+session_start();
+$user_id = $_SESSION['id'];
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -24,13 +28,16 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
-                    <a class="nav-link text-white px-3" href="http://127.0.0.1:5000">New Project</a>
+                    <a class="nav-link text-white px-3" href="http://127.0.0.1:5000?id=<?php echo $user_id;?>">New Project</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link text-white px-3" href="">Projects</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white px-3 font-weight-bold" href="#">Resumes</a>
+                    <a class="nav-link text-white px-3 font-weight-bold" href="http://127.0.0.1:5000/job">New job</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white px-3 font-weight-bold" href="http://127.0.0.1:5000/resume">Resumes</a>
                 </li>
             </ul>
             <form class="form-inline my-2 my-lg-0">
@@ -58,45 +65,40 @@
 // Assuming you have a database connection established
 include 'init.php';
 // Retrieve project information
-$projectQuery = "SELECT * FROM project";
+$projectQuery = "SELECT * FROM project WHERE u_id =$user_id AND state = 0";
 $projectResult = mysqli_query($link, $projectQuery);
 
-while ($projectRow = mysqli_fetch_assoc($projectResult)) {
-    $projectId = $projectRow['id'];
-    $projectName = $projectRow['title'];
-    $projectDesc = $projectRow['description'];
-    
-    // Retrieve team members for the project
-    $teamQuery = "SELECT r.firstname FROM resume r
-                  INNER JOIN teams t ON r.id = t.r_id
-                  WHERE t.p_id = $projectId";
-    $teamResult = mysqli_query($link, $teamQuery);
-// Assuming you have retrieved the project data from the database and stored it in an array called $projects
-
-  echo '<div class="card">';
-  echo '<table>';
-  echo '<tr>';
-  echo '<th>' . $projectName. '</th>';
-  echo '</tr>';
-  while ($teamRow = mysqli_fetch_assoc($teamResult)){
-    $workerFirstName = $teamRow['firstname'];
-  echo '<tr>'; 
-  echo '<td>' . $workerFirstName . '</td>';
-  echo '</tr>';
-  }
-  echo '</div>';
-  echo '</table>';
-  echo '<form action="Viewmore.php" method="GET">';
-  echo '<input type="hidden" name="id" value="';
-  echo $projectId;
-  echo '">';
-  echo '<button class="view-more" type="submit">View More</button>';
-  echo '</form>';
-  echo '</div>';
-
+if (!$projectResult) {
+    die("Query failed: " . mysqli_error($link));
 }
+
+if (mysqli_num_rows($projectResult) == 0) {
+    echo '<div class="card">';
+    echo '<td> No project found please insert a <a href="http://127.0.0.1:5000?id='.$user_id.'"> new project </a></td>';
+    echo '</div>';
+} else {
+    while ($projectRow = mysqli_fetch_assoc($projectResult)) {
+        $projectId = $projectRow['id'];
+        $projectName = $projectRow['title'];
+        $projectDesc = $projectRow['description'];
+
+        echo '<div class="card">';
+        echo '<table>';
+        echo '<tr>';
+        echo '<th>' . $projectName. '</th>';
+        echo '</tr>';
+        echo '<tr>'; 
+        echo '<td>'. $projectDesc. '</td>';
+        echo '</tr>';
+        echo '</table>';
+        echo '<form action="Viewmore.php" method="GET">';
+        echo '<input type="hidden" name="id" value="' . $projectId . '">';
+        echo '<button class="view-more" type="submit">View More</button>';
+        echo '</form>';
+        echo '</div>';
+    }
+}
+
 ?>
 </body>
 </html>
-
-

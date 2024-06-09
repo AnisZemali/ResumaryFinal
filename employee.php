@@ -41,80 +41,6 @@ if ($stmt = mysqli_prepare($link, $sql)) {
                     $newExperience = $_POST["experience"];
                     $newEducation = $_POST["education"];
 
-                    // Check if the password change form is submitted
-                    if (!empty($_POST['oldPassword']) && !empty($_POST['newPassword']) && !empty($_POST['confirmPassword'])) {
-                        $oldPassword = $_POST['oldPassword'];
-                        $newPassword = $_POST['newPassword'];
-                        $confirmPassword = $_POST['confirmPassword'];
-
-                        // Validate old password
-                        $sql = "SELECT password FROM resume2 WHERE email = ?";
-                        if ($stmt = mysqli_prepare($link, $sql)) {
-                            mysqli_stmt_bind_param($stmt, "s", $param_email);
-                            $param_email = $_SESSION["email"];
-                            if (mysqli_stmt_execute($stmt)) {
-                                mysqli_stmt_store_result($stmt);
-                                if (mysqli_stmt_num_rows($stmt) == 1) {
-                                    mysqli_stmt_bind_result($stmt, $hashed_password);
-                                    if (mysqli_stmt_fetch($stmt)) {
-                                        if (password_verify($oldPassword, $hashed_password)) {
-                                            // Check email format using regular expression
-                                            $emailPattern = '/^[^\s@]+@[^\s@]+\.[^\s@]+$/';
-                                            if (!preg_match($emailPattern, $newEmail)) {
-                                                echo "Please enter a valid email address.";
-                                                exit;
-                                            }
-
-                                            // Check password strength
-                                            if (strlen($newPassword) < 8) {
-                                                echo "Password must be at least 8 characters long.";
-                                                exit;
-                                            }
-
-                                            // Check for at least one lowercase letter, one uppercase letter, and one digit
-                                            $passwordPattern = '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/';
-                                            if (!preg_match($passwordPattern, $newPassword)) {
-                                                echo "Password must contain at least one lowercase letter, one uppercase letter, and one digit.";
-                                                exit;
-                                            }
-
-                                            // Check for special characters
-                                            $specialCharacterPattern = '/[ `!@#$%^&*()_+\-=\[\]{};:\'"\\|,.<>\/?~]/';
-                                            if (!preg_match($specialCharacterPattern, $newPassword)) {
-                                                echo "Password must contain at least one special character.";
-                                                exit;
-                                            }
-
-                                            // Validate new password
-                                            if ($newPassword === $confirmPassword) {
-                                                // Update password in the database
-                                                $updatePasswordSql = "UPDATE resume2 SET password = ? WHERE email = ?";
-                                                if ($updatePasswordStmt = mysqli_prepare($link, $updatePasswordSql)) {
-                                                    $hashed_new_password = password_hash($newPassword, PASSWORD_DEFAULT);
-                                                    mysqli_stmt_bind_param($updatePasswordStmt, "ss", $hashed_new_password, $param_email);
-                                                    if (mysqli_stmt_execute($updatePasswordStmt)) {
-                                                        // Password updated successfully
-                                                        echo "Password updated successfully!";
-                                                    } else {
-                                                        echo "Failed to update password. Please try again later.";
-                                                    }
-                                                    mysqli_stmt_close($updatePasswordStmt);
-                                                } else {
-                                                    echo "Failed to prepare statement for updating password.";
-                                                }
-                                            } else {
-                                                echo "New password and confirm password do not match.";
-                                            }
-                                        } else {
-                                            echo "Invalid old password.";
-                                        }
-                                    }
-                                }
-                            }
-                            mysqli_stmt_close($stmt);
-                        }
-                    }
-
                     // Prepare an update statement for other user details
                     $updateSql = "UPDATE resume2 SET name=?, email=?, phoneNumber=?, skills=?, experience=?, education=? WHERE email=?";
 
@@ -190,18 +116,17 @@ if ($stmt = mysqli_prepare($link, $sql)) {
                       min-height: 150px;
                     }
                     .archive-form .btn-primary {
-                      background-color: #007bff;
-                      border-color: #007bff;
+                      background-color: #FF5722;
+                      border-color: #FF5722;
                     }
                     .archive-form .btn-primary:hover {
-                      background-color: #0056b3;
-                      border-color: #0056b3;
+                      background-color: #FF5722;
+                      border-color: #FF5722;
                     }
-                    /* Logout Link */
-                    .logout-link {
-                      position: absolute;
-                      top: 10px;
-                      right: 10px;
+                    /* Dropdown Menu */
+                    .dropdown-menu-right {
+                      right: 0;
+                      left: auto;
                     }
                     .btn-custom {
                       color: #fff;
@@ -209,15 +134,36 @@ if ($stmt = mysqli_prepare($link, $sql)) {
                       border-color: #FF5722;
                     }
                     .btn-custom:hover {
-                      background-color: #F4511E;
+                      background-color: #FF5722;
                       border-color: #F4511E;
                     }
+                    <style>
+ 
+</style>
+
                   </style>
                 </head>
                 <body>
-                  <div class="logout-link">
-                    <a href="logout.php" class="btn btn-custom">Logout</a>
-                  </div>
+                  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                    <div class="container">
+                      <a class="navbar-brand" href="#">Resumary</a>
+                      <div class="collapse navbar-collapse" id="navbarNav">
+                        <ul class="navbar-nav ml-auto">
+                          <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              Profile
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                              <a class="dropdown-item" href="change_password.php">Change Password</a>
+                              <a class="dropdown-item" href="employee.php">Edit Profile</a>
+                              <div class="dropdown-divider"></div>
+                              <a class="dropdown-item" href="logout.php">Logout</a>
+                            </div>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </nav>
                   <div class="container">
                     <div class="archive-container">
                       <div class="archive-header">
@@ -249,22 +195,8 @@ if ($stmt = mysqli_prepare($link, $sql)) {
                             <label for="education">Education:</label>
                             <textarea class="form-control" id="education" name="education"><?php echo htmlspecialchars($education); ?></textarea>
                           </div>
-                          <hr>
-                          <h2>Change Password</h2>
                           <div class="form-group">
-                            <label for="oldPassword">Old Password:</label>
-                            <input type="password" class="form-control" id="oldPassword" name="oldPassword">
-                          </div>
-                          <div class="form-group">
-                            <label for="newPassword">New Password:</label>
-                            <input type="password" class="form-control" id="newPassword" name="newPassword">
-                          </div>
-                          <div class="form-group">
-                            <label for="confirmPassword">Confirm New Password:</label>
-                            <input type="password" class="form-control" id="confirmPassword" name="confirmPassword">
-                          </div>
-                          <div class="form-group">
-                            <input type="button" id="saveChanges" class="btn btn-primary" value="Save Changes">
+                            <input type="submit" class="btn btn-primary" value="Save Changes">
                           </div>
                         </form>
                       </div>
@@ -272,26 +204,10 @@ if ($stmt = mysqli_prepare($link, $sql)) {
                   </div>
 
                   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-                  <script>
-                    $(document).ready(function() {
-                        $("#saveChanges").click(function() {
-                            $.ajax({
-                                type: "POST",
-                                url: "<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>",
-                                data: $("#updateForm").serialize(),
-                                success: function(response) {
-                                    // Display success message or handle errors if needed
-                                    // In this example, we assume that the updated information is already displayed
-                                    alert(response);
-                                }
-                            });
-                        });
-                    });
-                  </script>
+                  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+                  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
                 </body>
                 </html>
-
-
 
                 <?php
             } else {
@@ -307,6 +223,5 @@ if ($stmt = mysqli_prepare($link, $sql)) {
     echo "Failed to prepare the statement.";
 }
 
-// Close connection
-mysqli_close($link);
+
 ?>

@@ -64,6 +64,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             $_SESSION["username"] = $username;
                             $_SESSION["email"] = $email;
                             $_SESSION["role"] = $role; // Store the role in session
+                            $_SESSION["role"] = $role;
+                            $_SESSION["r_id"] = $r_id; 
+
 
                             // Redirect user to appropriate dashboard page
                             if ($role === "admin") {
