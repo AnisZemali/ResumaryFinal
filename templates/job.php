@@ -29,7 +29,7 @@
                     <a class="nav-link text-white px-3" href="{{ url_for('static', filename='grey_logo.png') }}">Projects</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white px-3" href="http://127.0.0.1:5000/job">New job</a>
+                    <a class="nav-link text-white px-3" href="http://127.0.0.1:5000/job">New Job</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link text-white px-3 font-weight-bold" href="{{url_for('resume')}}">Resumes</a>
@@ -50,41 +50,26 @@
     <div class="chat-container" style="display: center">
         <div class="chat-header">
             <div class="col-md-12">
-                <h1 class="mb-4">New Project</h1>
-                <form method="POST" action="/submit">
+                <h1 class="mb-4">New job</h1>
+                <form method="POST" action="/job/submit">
                     <div class="form-group">
-                        <a>Title</a>
-                        <input type="hidden" id="id" name="id" value="{{id}}">
-                        <textarea class="form-control" id="project_title" name="project_title" placeholder="Enter your project title here" rows="1" required></textarea>
-                        <br> 
-                        <a>Description</a>
-                        <textarea class="form-control" id="project_description" name="project_description" placeholder="Enter the description of your project here " rows="2" required></textarea>
+                        <a>Job description</a>
+                        <textarea class="form-control" id="job_description" name="job_description" placeholder="Enter the description of your job here " rows="1" required></textarea>
                     </div>
-                    <button type="submit" name="action" value="Percentage Match" class="chat-btn">Create project and find a team</button>
+                    <button type="submit" name="action" value="Percentage Match" class="chat-btn">Find a profile </button>
                 </form>
         
                 <div class="mt-5">
                     {% if results %}
                         <h2>Results:</h2>
                         <ul class="list-group">
-                            {% for result in results %}
-                                <li class="list-group-item" style='color : black    '>
-                                    <h3 style = >{{ result.role }}</h3>
-                                    <ul class="list-group">
-                                        {% for resume in result.resumes %}
-                                            <li class="list-group-item">
-                                                {{ resume.name }}
-                                                <a href="{{ resume.view_pdf_url }}" class="btn btn-primary ml-3">View PDF</a>
-                                            </li>
-                                        {% endfor %}
-                                    </ul>
-                                </li>
-                            {% endfor %}
+                            <li>
+                            <strong>Name:</strong> {{ results.name }} <br>
+                            <br>
+                             <a class="chat-btn" href="{{ results.view_pdf_url }}">View PDF</a>
+                            </li>
+
                         </ul>
-                        <form method="GET" action="/projects/validate_team">
-                            <input type="hidden" name="results" value="{{ results }}">
-                            <button type="submit" class="chat-btn" name="action" value="Validate Team">Validate Team</button>
-                        </form>
                     {% endif %}
                 </div>
             </div>
